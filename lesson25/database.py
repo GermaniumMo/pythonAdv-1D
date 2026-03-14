@@ -50,3 +50,21 @@ def read_movie(movie_id: int):
     if row is None:
         return None
     return Movie(id = row['id'], title = row['title'], director = row['director'])
+
+def update_movie(movie_id : int, movie: MovieCreate) -> bool:
+    connection = create_connection()
+    cursor = connection.cursor()
+    cursor.execute('Update movies set title = ?, director = ? where id = ?', (movie.title, movie.director, movie_id))
+    connection.commit()
+    updated = cursor.rowcount
+    connection.close()
+    return updated > 0
+
+def delete_movie(movie_id: int) -> bool:
+    connection = create_connection()
+    cursor = connection.cursor()
+    cursor.execute('delete from movies where id = ?', (movie_id,))
+    connection.commit()
+    deleted = cursor.rowcount
+    connection.close()
+    return deleted  > 0
