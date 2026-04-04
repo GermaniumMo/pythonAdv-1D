@@ -11,7 +11,12 @@ api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
 
 
 def get_api_key(api_key: str = Depends(api_key_header)):
-    allowed_api_key = os.getenv("API_KEY", "").split(",")
+    allowed_api_key = os.getenv("API_KEYS", "").split(", ")
+    allowed_api_key = [
+        key.strip().strip("'").strip('"')
+        for key in allowed_api_key
+        if key.strip()
+    ]
 
     print("Received API Key:", api_key)
     print("Allowed API Key:", allowed_api_key)
